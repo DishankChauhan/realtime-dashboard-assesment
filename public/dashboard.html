@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Visitor Analytics Dashboard</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <h1><i class="fas fa-chart-line"></i> Real-Time Analytics Dashboard</h1>
+            <div class="connection-status" id="connectionStatus">
+                <span class="status-indicator" id="statusIndicator"></span>
+                <span id="statusText">Connecting...</span>
+            </div>
+        </header>
+
+        <!-- Main Dashboard Content -->
+        <main class="dashboard-main">
+            <!-- Stats Overview -->
+            <section class="stats-overview">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                    <div class="stat-content">
+                        <h3>Active Visitors</h3>
+                        <span class="stat-number" id="activeVisitors">0</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-calendar-day"></i></div>
+                    <div class="stat-content">
+                        <h3>Total Today</h3>
+                        <span class="stat-number" id="totalToday">0</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-desktop"></i></div>
+                    <div class="stat-content">
+                        <h3>Connected Dashboards</h3>
+                        <span class="stat-number" id="connectedDashboards">0</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-mouse-pointer"></i></div>
+                    <div class="stat-content">
+                        <h3>Active Sessions</h3>
+                        <span class="stat-number" id="activeSessions">0</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dashboard Content Grid -->
+            <div class="dashboard-grid">
+                <!-- Live Visitor Feed -->
+                <section class="dashboard-card">
+                    <header class="card-header">
+                        <h2><i class="fas fa-stream"></i> Live Visitor Feed</h2>
+                        <div class="card-controls">
+                            <button class="btn btn-small" id="clearEventsBtn">
+                                <i class="fas fa-trash"></i> Clear
+                            </button>
+                        </div>
+                    </header>
+                    <div class="card-content">
+                        <div class="visitor-feed" id="visitorFeed">
+                            <div class="no-data">
+                                <i class="fas fa-hourglass-half"></i>
+                                <p>Waiting for visitor events...</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Active Sessions -->
+                <section class="dashboard-card">
+                    <header class="card-header">
+                        <h2><i class="fas fa-route"></i> Active Sessions</h2>
+                        <div class="card-controls">
+                            <button class="btn btn-small" id="refreshSessionsBtn">
+                                <i class="fas fa-sync-alt"></i> Refresh
+                            </button>
+                        </div>
+                    </header>
+                    <div class="card-content">
+                        <div class="sessions-list" id="sessionsList">
+                            <div class="no-data">
+                                <i class="fas fa-user-clock"></i>
+                                <p>No active sessions</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Visitor Chart -->
+                <section class="dashboard-card chart-card">
+                    <header class="card-header">
+                        <h2><i class="fas fa-chart-area"></i> Visitors (Last 10 Minutes)</h2>
+                        <div class="card-controls">
+                            <select id="chartTimeRange" class="form-select">
+                                <option value="10">10 minutes</option>
+                                <option value="30">30 minutes</option>
+                                <option value="60">1 hour</option>
+                            </select>
+                        </div>
+                    </header>
+                    <div class="card-content">
+                        <div class="chart-container" id="visitorChart">
+                            <canvas id="chartCanvas" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Page Views -->
+                <section class="dashboard-card">
+                    <header class="card-header">
+                        <h2><i class="fas fa-file-alt"></i> Popular Pages</h2>
+                        <div class="card-controls">
+                            <button class="btn btn-small" id="filterToggleBtn">
+                                <i class="fas fa-filter"></i> Filter
+                            </button>
+                        </div>
+                    </header>
+                    <div class="card-content">
+                        <!-- Filter Panel -->
+                        <div class="filter-panel" id="filterPanel" style="display: none;">
+                            <div class="filter-group">
+                                <label for="countryFilter">Country:</label>
+                                <select id="countryFilter" class="form-select">
+                                    <option value="">All Countries</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="pageFilter">Page:</label>
+                                <select id="pageFilter" class="form-select">
+                                    <option value="">All Pages</option>
+                                </select>
+                            </div>
+                            <div class="filter-actions">
+                                <button class="btn btn-primary" id="applyFilterBtn">Apply Filter</button>
+                                <button class="btn btn-secondary" id="clearFilterBtn">Clear</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Page Views List -->
+                        <div class="page-views" id="pageViews">
+                            <div class="no-data">
+                                <i class="fas fa-chart-bar"></i>
+                                <p>No page views data</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Alert Container -->
+        <div class="alert-container" id="alertContainer"></div>
+
+        <!-- Session Modal -->
+        <div class="modal" id="sessionModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Session Journey</h3>
+                    <button class="modal-close" id="closeModalBtn">&times;</button>
+                </div>
+                <div class="modal-body" id="sessionModalBody">
+                    <!-- Session details will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

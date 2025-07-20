@@ -1,0 +1,21 @@
+{
+  "name": "real-time-analytics-server",
+  "version": "1.0.0",
+  "description": "Real-time visitor analytics with WebSocket goodness",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["websocket", "analytics", "real-time", "express", "dashboard"],
+  "author": "A developer who drinks too much coffee",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "ws": "^8.18.3"
+  }
+}
